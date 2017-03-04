@@ -1,0 +1,25 @@
+(in-package :pulseaudio)
+
+
+#|
+size_t pa_bytes_per_second(const pa_sample_spec *spec)
+size_t pa_frame_size(const pa_sample_spec *spec)
+size_t pa_sample_size(const pa_sample_spec *spec)
+size_t pa_sample_size_of_format(pa_sample_format_t f)
+pa_usec_t pa_bytes_to_usec(uint64_t length, const pa_sample_spec *spec)
+size_t pa_usec_to_bytes(pa_usec_t t, const pa_sample_spec *spec)
+pa_sample_spec* pa_sample_spec_init(pa_sample_spec *spec)
+int pa_sample_format_valid(unsigned format)
+int pa_sample_rate_valid(uint32_t rate)
+int pa_channels_valid(uint8_t channels)
+int pa_sample_spec_valid(const pa_sample_spec *spec)
+int pa_sample_spec_equal(const pa_sample_spec*a, const pa_sample_spec*b)
+const char *pa_sample_format_to_string(pa_sample_format_t f)
+pa_sample_format_t pa_parse_sample_format(const char *format)
+char* pa_sample_spec_snprint(char *s, size_t l, const pa_sample_spec *spec)
+char* pa_bytes_snprint(char *s, size_t l, unsigned v)
+int pa_sample_format_is_le(pa_sample_format_t f)
+int pa_sample_format_is_be(pa_sample_format_t f)
+pa_sample_format_is_ne(f)
+pa_sample_format_is_re(f)
+|#

@@ -1,0 +1,62 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| A simple recording tool using the simple API
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  (load "../cl-pulseaudio.asd")
+  #+quicklisp (ql:quickload '(:cl-pulseaudio :osicat) :silent t))
+
+(defpackage :ros.script.parec-simple.3697584764
+  (:use :cl :pulseaudio :cffi))
+(in-package :ros.script.parec-simple.3697584764)
+(defconstant +BUFSIZE+ 1024)
+
+(defun loop-write (fd data size)
+  "A simple routine calling UNIX write() in a loop"
+  (loop with ret = 0
+        while (plusp size)
+        for r = (osicat-posix:write fd data size)
+        do (cond ((< r 0)
+                  (return-from loop-write r))
+                 ((= r 0)
+                  (return-from loop-write ret)))
+           (incf ret r)
+           (cffi:incf-pointer data r)
+           (decf size r)
+        finally
+           (return-from loop-write ret)))
+
+(defun main (&rest argv)
+  (let ((nul (null-pointer))
+        s (ret 1))
+    (with-foreign-objects ((err :int)
+                           (buf :unsigned-char +BUFSIZE+)
+                           (ss '(:struct pa_sample_spec))) ;; The sample type to use
+      (with-foreign-slots ((pa_sample_spec-format
+                            pa_sample_spec-rate
+                            pa_sample_spec-channels) ss (:struct pa_sample_spec))
+        (setf pa_sample_spec-format PA_SAMPLE_S16LE
+              pa_sample_spec-rate 44100
+              pa_sample_spec-channels 2
+              ;; Create the recording stream
+              s (pa-simple-new nul (file-namestring *load-pathname*) PA_STREAM_RECORD nul "record" ss nul nul err)))
+      (tagbody
+         (when (null-pointer-p s)
+           (format *error-output* "~A: pa_simple_new() failed: ~A~%" *load-pathname* (pa-strerror (mem-aref err :int)))
+           (go finish))
+       loop
+         (when (minusp (pa-simple-read s buf +BUFSIZE+ err)) ;; Record some data ...
+           (format *error-output* "~A: pa_simple_read() failed: ~A~%" *load-pathname* (pa-strerror (mem-aref err :int)))
+           (go finish))
+         (unless (= (loop-write 1 buf +BUFSIZE+) +BUFSIZE+) ;; And write it to STDOUT
+           (format *error-output* "~A: write() failed: ~A~%" *load-pathname* (osicat-posix:strerror (mem-aref err :int)))
+           (go finish))
+         (go loop)
+         (setf ret 0)
+       finish
+         (unless (null-pointer-p s)
+           (pa-simple-free s))))
+    ret))
+;;; vim: set ft=lisp lisp:
