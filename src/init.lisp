@@ -68,7 +68,6 @@
    :pa_stream_adjust_latency
    :pa_stream_dont_inhibit_auto_suspend
    :pa_err_invalidserver
-   :pa-simple-get-latency
    :pa_sample_s24_32be
    :pa_err_noentity
    :pa_err_notimplemented
@@ -89,7 +88,6 @@
    :pa_sample_s16le
    :pa_stream_start_unmuted
    :pa_err_killed
-   :pa-simple-drain
    :pa_subscription_mask_source_output
    :size-of-uint32_t
    :pa_stream_fix_format
@@ -128,7 +126,6 @@
    :pa-strerror
    :pa_stream_no_remap_channels
    :pa_sink_hardware
-   :pa-simple-free
    :pa_operation_done
    :pa_sink_decibel_volume
    :pa_subscription_mask_server
@@ -138,10 +135,8 @@
    :pa_subscription_event_sink_input
    :pa_direction_output
    :pa_subscription_mask_source
-   :pa_stream_fix_channels
-   :pa-simple-flush
+   :pa_stream_fix_channesl
    :pa_invalid_index
-   :pa-simple-new
    :pa_ok
    :pa_err_badstate
    :pa_source_invalid_state
@@ -159,14 +154,12 @@
    :pa_seek_relative_on_read
    :pa_sample_s32le
    :pa_stream_peak_detect
-   :pa-simple-write
    :pa_sink_network
    :pa_stream_passthrough
    :pa_sample_s16ne
    :pa_device_type_source
    :pa_err_authkey
    :pa_stream_record
-   :pa-simple-read
    :pa_sample_s24be
    :pa_sample_s32be
    :pa_sink_invalid_state
@@ -216,7 +209,16 @@
    :pa_sink_hw_mute_ctrl
    :pa_sample_s32re
    :pa_context_failed
-   :pa_subscription_mask_null))
+   :pa_subscription_mask_null
+
+   :pa-simple-new
+   :pa-simple-free
+   :pa-simple-drain
+   :pa-simple-flush
+   :pa-simple-get-latency
+   :pa-simple-read
+   :pa-simple-write
+   ))
 
 (in-package :pulseaudio)
 
