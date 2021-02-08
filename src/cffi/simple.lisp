@@ -1,4 +1,4 @@
-(in-package :pulseaudio)
+(in-package :pulseaudio.cffi)
 
 (cffi:defcfun "pa_simple_new" :pointer
   (server :string)

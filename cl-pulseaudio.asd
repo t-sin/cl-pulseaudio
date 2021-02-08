@@ -20,7 +20,7 @@
 (in-package :cl-pulseaudio-asd)
 
 (defsystem cl-pulseaudio
-  :description "pulse audio binding."
+  :description "PulseAudio bindings for Common Lisp."
   :author "SANO Masatoshi"
   :version "0.0.1"
   :license "LLGPL"
@@ -29,9 +29,10 @@
                :cffi-grovel
                :osicat)
   :components ((:module "src"
-                :components
-                ((:file "init")
-                 (cffi-grovel:grovel-file "grovel")
-                 (:file "simple")
-                 (:file "error"))))
+                 :components
+                ((:module "cffi"
+                  :components ((:file "init")
+                               (cffi-grovel:grovel-file "grovel")
+                               (:file "simple")
+                               (:file "error"))))))
   :serial t)

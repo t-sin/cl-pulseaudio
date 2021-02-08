@@ -1,4 +1,4 @@
-(in-package :pulseaudio)
+(in-package :pulseaudio.cffi)
 
 
 #|

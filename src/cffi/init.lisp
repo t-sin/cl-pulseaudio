@@ -1,5 +1,5 @@
 (in-package :common-lisp)
-(defpackage :pulseaudio
+(defpackage :pulseaudio.cffi
   (:use :cl)
   (:export
    :pa_sample_spec
@@ -220,7 +220,7 @@
    :pa-simple-write
    ))
 
-(in-package :pulseaudio)
+(in-package :pulseaudio.cffi)
 
 (cffi:define-foreign-library libpulse
   (t (:default "libpulse")))
