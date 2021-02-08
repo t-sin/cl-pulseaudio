@@ -28,11 +28,13 @@
   :depends-on (:cffi
                :cffi-grovel
                :osicat)
+  :serial t
   :components ((:module "src"
                  :components
                 ((:module "cffi"
                   :components ((:file "init")
                                (cffi-grovel:grovel-file "grovel")
                                (:file "simple")
-                               (:file "error"))))))
+                               (:file "error")))
+                 (:file "pulseaudio"))))
   :serial t)
