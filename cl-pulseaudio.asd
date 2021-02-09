@@ -36,5 +36,6 @@
                                (cffi-grovel:grovel-file "grovel")
                                (:file "simple")
                                (:file "error")))
+                 (:file "keyword")
                  (:file "pulseaudio"))))
   :serial t)
