@@ -2,18 +2,22 @@
 (defpackage :pulseaudio.cffi
   (:use :cl)
   (:export
+   ;; sample spec
    :pa_sample_spec
    :pa_sample_spec-format
    :pa_sample_spec-rate
    :pa_sample_spec-channels
-   
+   :pa_sample_spec_snprint_max
+
+   ;; buffer attributes
    :pa_buffer_attr
    :pa_buffer_attr-maxlength
    :pa_buffer_attr-rate
    :pa_buffer_attr-prebuf
    :pa_buffer_attr-minreq
    :pa_buffer_attr-fragsize
-   
+
+   ;; timing info
    :pa_timing_info
    :pa_timing_info-timestamp
    :pa_timing_info-synchronized_clocks
@@ -28,14 +32,41 @@
    :pa_timing_info-configured_sink_usec
    :pa_timing_info-configured_source_usec
    :pa_timing_info-since_underrun
-   
+
+   ;; swapn API
    :pa_spawn_api
    :pa_spawn_api-prefork
    :pa_spawn_api-postfork
    :pa_spawn_api-atfork
 
-   :pa_source_running
+   ;; sample formats
+   :pa_sample_u8
+   :pa_sample_alaw
+   :pa_sample_ulaw
+   :pa_sample_s16le
+   :pa_sample_s16be
+   :pa_sample_float32le
+   :pa_sample_float32be
+   :pa_sample_s32le
+   :pa_sample_s32be
+   :pa_sample_s24le
+   :pa_sample_s24be
+   :pa_sample_s24_32le
+   :pa_sample_s24_32be
+   ;; endian-convinient sample formats
+   :pa_sample_float32
+   :pa_sample_s24_32re
+   :pa_sample_s24_32ne
+   :pa_sample_s24re
+   :pa_sample_s24ne
    :pa_sample_float32re
+   :pa_sample_float32ne
+   :pa_sample_s16re
+   :pa_sample_s16ne
+   :pa_sample_s32re
+   :pa_sample_s32ne
+
+   :pa_source_running
    :pa_subscription_mask_autoload
    :pa_stream_early_requests
    :pa_subscription_event_new
@@ -43,32 +74,22 @@
    :pa_context_ready
    :pa_subscription_event_autoload
    :pa_stream_fix_rate
-   :pa_sample_s24_32re
    :pa_stream_not_monotonic
-   :pa_sample_float32le
    :size-of-pa_sample_format_t
-   :pa_sample_spec_snprint_max
    :pa_stream_upload
    :pa_err_toolarge
-   :pa_sample_s24_32ne
-   :pa_sample_s24ne
    :pa_err_internal
    :pa_stream_auto_timing_update
    :pa_stream_fail_on_suspend
    :pa_err_obsolete
    :pa_context_nofail
-   :pa_sample_s24_32le
    :pa_err_nodata
-   :pa_sample_float32be
    :pa_stream_terminated
-   :pa_sample_ulaw
    :pa_subscription_event_source_output
    :pa_context_unconnected
-   :pa_sample_s24re
    :pa_stream_adjust_latency
    :pa_stream_dont_inhibit_auto_suspend
    :pa_err_invalidserver
-   :pa_sample_s24_32be
    :pa_err_noentity
    :pa_err_notimplemented
    :pa_subscription_mask_module
@@ -78,14 +99,12 @@
    :size-of-size_t
    :pa_subscription_mask_sample_cache
    :pa_err_timeout
-   :pa_sample_s16re
    :pa_source_unlinked
    :pa_stream_ready
    :pa_subscription_event_change
    :pa_stream_relative_volume
    :pa_source_suspended
    :pa_subscription_event_source
-   :pa_sample_s16le
    :pa_stream_start_unmuted
    :pa_err_killed
    :pa_subscription_mask_source_output
@@ -101,15 +120,12 @@
    :size-of-pa_buffer_attr
    :pa_sink_unlinked
    :pa_bytes_snprint_max
-   :pa_sample_float32
    :pa_err_access
-   :pa_sample_alaw
    :pa_device_type_sink
    :pa_context_noautospawn
    :pa_err_exist
    :pa_subscription_event_client
    :pa_source_latency
-   :pa_sample_u8
    :pa_err_connectionrefused
    :pa_operation_running
    :pa_subscription_event_type_mask
@@ -131,7 +147,6 @@
    :pa_subscription_mask_server
    :pa_seek_absolute
    :pa_context_setting_name
-   :pa_sample_s24le
    :pa_subscription_event_sink_input
    :pa_direction_output
    :pa_subscription_mask_source
@@ -150,24 +165,18 @@
    :pa_err_unknown
    :pa_seek_relative
    :size-of-pa_stream_direction_t
-   :pa_sample_s32ne
    :pa_seek_relative_on_read
-   :pa_sample_s32le
    :pa_stream_peak_detect
    :pa_sink_network
    :pa_stream_passthrough
-   :pa_sample_s16ne
    :pa_device_type_source
    :pa_err_authkey
    :pa_stream_record
-   :pa_sample_s24be
-   :pa_sample_s32be
    :pa_sink_invalid_state
    :pa_subscription_mask_all
    :pa_stream_dont_move
    :pa_stream_creating
    :pa_source_idle
-   :pa_sample_s16be
    :size-of-time_t
    :pa_context_terminated
    :pa_operation_cancelled
@@ -184,7 +193,6 @@
    :pa_rate_max
    :pa_source_dynamic_latency
    :pa_sink_flat_volume
-   :pa_sample_float32ne
    :pa_subscription_mask_sink_input
    :pa_context_authorizing
    :size-of-timeval
@@ -207,7 +215,6 @@
    :pa_subscription_mask_sink
    :pa_seek_relative_end
    :pa_sink_hw_mute_ctrl
-   :pa_sample_s32re
    :pa_context_failed
    :pa_subscription_mask_null
 
