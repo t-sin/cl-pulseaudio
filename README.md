@@ -1,6 +1,6 @@
 # cl-pulseaudio
 
-PulseAudio bindings for Common Lisp.
+[PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) bindings for Common Lisp.
 
 ## Installation
 
