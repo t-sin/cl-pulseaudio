@@ -9,7 +9,8 @@
 
 ## Installation
 
-TBD
+With [Roswell](https://github.com/roswell/roswell), type `ros install t-sin/cl-pulseaudio`.
+Or simply copy this repository into your ASDF load path.
 
 ## Usage
 
