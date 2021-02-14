@@ -27,6 +27,11 @@
    (raw-buffer :initarg :raw-buffer
                :accessor pulseaudio-stream-raw-buffer)))
 
+(defmethod close-stream ((stream pulseaudio-stream))
+  (unless (cffi:null-pointer-p (pulseaudio-stream-raw-buffer stream))
+    (cffi:foreign-free (pulseaudio-stream-raw-buffer stream)))
+  (setf (pulseaudio-stream-raw-buffer stream) nil))
+
 (defclass simple-stream (pulseaudio-stream)
   ((raw-stream :accessor simple-stream-raw-stream)
    (error-code :initarg :error-code
@@ -62,7 +67,8 @@
 
 (defmethod close-stream ((stream simple-stream))
   (unless (cffi:null-pointer-p (simple-stream-raw-stream stream))
-    (pa-simple-free (simple-stream-raw-stream stream))))
+    (pa-simple-free (simple-stream-raw-stream stream)))
+  (call-next-method))
 
 (defmethod write-stream ((stream simple-stream) (data simple-array))
   (let ((buf (pulseaudio-stream-raw-buffer stream))
