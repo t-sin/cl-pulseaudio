@@ -93,4 +93,5 @@
                                :buffer-attributes ,buffer-attributes)))
      (unwind-protect
           (progn ,@body)
-       (close-stream ,stream))))
+       (close-stream ,stream))
+     nil))
