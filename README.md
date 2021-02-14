@@ -1,6 +1,6 @@
 # cl-pulseaudio
 
-[PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) bindings for Common Lisp.
+[PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) bindings for Common Lisp. It's tested on SBCL.
 
 ## Requirements
 
@@ -26,6 +26,10 @@ Or simply copy this repository into your ASDF load path.
             :do (setf (aref buffer i) s))
       (pulseaudio:write-stream stream buffer))))
 ```
+
+## Limitation
+
+This library uses [PulseAudio Simple API (synchronous API)](https://freedesktop.org/software/pulseaudio/doxygen/simple.html) so threading is roughly implemented by this. If you yuse the editor interrupts (e.g. C-c C-c), it breaks PulseAudio sound threads. When it happens Lisp process will be hang up.
 
 ## Authors
 
