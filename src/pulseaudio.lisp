@@ -49,8 +49,8 @@
                                :channels channels
                                :rate rate
                                :buffer-size buffer-size
-                               :raw-buffer (cffi:foreign-alloc :uint8 :count buffer-size))))
-    (setf (simple-stream-error-code stream) 0)
+                               :raw-buffer (cffi:foreign-alloc :uint8 :count buffer-size)
+                               :error-code (cffi:foreign-alloc :uint8 :count 1))))
     (let ((server (cffi:null-pointer))
           (direction (raw-direction direction))
           (device (or device (cffi:null-pointer)))
@@ -64,12 +64,17 @@
                 pa_sample_spec-rate rate)
           (setf (simple-stream-raw-stream stream)
                 (pa-simple-new server appname direction device description
-                               sample-spec channel-map buffer-attributes (cffi:null-pointer)))))
+                               sample-spec channel-map buffer-attributes
+                               (simple-stream-error-code stream)))))
       stream)))
 
 (defmethod close-stream ((stream simple-stream))
   (unless (cffi:null-pointer-p (simple-stream-raw-stream stream))
     (pa-simple-free (simple-stream-raw-stream stream)))
+  (unless (cffi:null-pointer-p (simple-stream-error-code stream))
+    (cffi:foreign-free (simple-stream-error-code stream)))
+  (setf (simple-stream-raw-stream stream) nil
+        (simple-stream-error-code stream) nil)
   (call-next-method))
 
 (defmethod flush-stream ((stream simple-stream))
@@ -87,9 +92,11 @@
 
 (defmethod write-stream ((stream simple-stream) (data simple-array))
   (let ((buf (pulseaudio-stream-raw-buffer stream))
-        (len (pulseaudio-stream-buffer-size stream)))
+        (len (pulseaudio-stream-buffer-size stream))
+        (error-code (simple-stream-error-code stream)))
     (cffi:lisp-array-to-foreign data buf (list :array :uint8 len))
-    (pa-simple-write (simple-stream-raw-stream stream) buf len (cffi:null-pointer))))
+    (when (minusp (pa-simple-write (simple-stream-raw-stream stream) buf len error-code))
+      (error (pa-strerror (cffi:mem-aref error-code :int))))))
 
 (defmacro with-audio-stream ((stream &key (appname "cl-pulseaudio app")
                                           (direction :output)
