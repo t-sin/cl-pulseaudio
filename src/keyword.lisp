@@ -2,7 +2,9 @@
   (:use #:cl
         #:pulseaudio.cffi)
   (:export #:*available-sample-formats*
-           #:raw-sample-format))
+           #:raw-sample-format
+           #:*available-directions*
+           #:raw-direction))
 (in-package #:pulseaudio.keyword)
 
 (defvar *available-sample-formats*
@@ -22,3 +24,10 @@
 
 (defun raw-sample-format (keyword)
   (cdr (assoc keyword *available-sample-formats*)))
+
+(defvar *available-directions*
+  `((:input . ,PA_STREAM_RECORD)
+    (:output . ,PA_STREAM_PLAYBACK)))
+
+(defun raw-direction (keyword)
+  (cdr (assoc keyword *available-directions*)))
