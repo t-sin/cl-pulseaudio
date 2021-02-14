@@ -120,6 +120,7 @@
                                :channel-map ,channel-map
                                :buffer-attributes ,buffer-attributes)))
      (unwind-protect
-          (progn ,@body)
-       (close-stream ,stream))
-     nil))
+          (progn ,@body nil)
+       (progn
+         (flush-stream ,stream)
+         (close-stream ,stream)))))
