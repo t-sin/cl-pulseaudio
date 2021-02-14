@@ -8,6 +8,8 @@
            #:open-stream
            #:close-stream
            #:write-stream
+           #:flush-stream
+           #:drain-stream
            #:with-audio-stream))
 (in-package #:pulseaudio)
 
@@ -69,6 +71,19 @@
   (unless (cffi:null-pointer-p (simple-stream-raw-stream stream))
     (pa-simple-free (simple-stream-raw-stream stream)))
   (call-next-method))
+
+(defmethod flush-stream ((stream simple-stream))
+  (let ((error-code (simple-stream-error-code stream)))
+    (when (minusp (pa-simple-flush (simple-stream-raw-stream stream) error-code))
+      (format t "~a~%" (pa-strerror (cffi:mem-aref error-code :int)))
+      (error (pa-strerror (cffi:mem-aref error-code :int))))))
+
+(defmethod drain-stream ((stream simple-stream))
+  (when (cffi:null-pointer-p (simple-stream-raw-stream stream))
+    (return-from drain-stream))
+  (let ((error-code (simple-stream-error-code stream)))
+    (when (minusp (pa-simple-drain (simple-stream-raw-stream stream) error-code))
+      (error (pa-strerror (cffi:mem-aref error-code :int))))))
 
 (defmethod write-stream ((stream simple-stream) (data simple-array))
   (let ((buf (pulseaudio-stream-raw-buffer stream))
