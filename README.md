@@ -10,12 +10,13 @@ TBD
 
 ```lisp
 ;; play 440Hz sine wave for 1 second
-(flet ((sine-to-byte (x)
-         (coerce (floor (* 255 (+ 0.5 (/ (sin x) 2)))) '(unsigned-byte 8))))
-  (let ((buffer (make-array 44100 :element-type '(unsigned-byte 8))))
-    (pulseaudio:with-audio-stream (stream :sample-format :u8 :channels 1)
+(let* ((rate 44100)
+       (buffer (make-array rate :element-type '(unsigned-byte 8))))
+  (flet ((sine-to-byte (x)
+           (coerce (floor (* 255 (+ 0.5 (/ (sin x) 2)))) '(unsigned-byte 8))))
+    (pulseaudio:with-audio-stream (stream :sample-format :u8 :channels 1 :buffer-size rate)
       (loop :for i :from 0 :below (length buffer)
-            :for s := (sine-to-byte (* i (* (/ 440 44100) pi)))
+            :for s := (sine-to-byte (* i (* (/ 440 rate) pi)))
             :do (setf (aref buffer i) s))
       (pulseaudio:write-stream stream buffer))))
 ```
