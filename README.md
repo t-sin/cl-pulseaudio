@@ -2,6 +2,11 @@
 
 [PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) bindings for Common Lisp.
 
+## Requirements
+
+- PulseAudio
+- libpulse-dev
+
 ## Installation
 
 TBD
